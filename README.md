@@ -31,4 +31,10 @@ Create Jenkins credentials:
 - username: BrowserStack username
 - password: BrowserStack access key
 
+For a Freestyle job on a Linux agent use `Execute shell`:
+
+```bash
+sh ci/run-tests.sh
+```
+
 The pipeline publishes Allure results from `build/allure-results`.
