@@ -1,0 +1,7 @@
+/.idea
+/build
+/.gradle
+*.class
+/allure-results
+/allure-report
+/src/test/resources/config/browserstack.local.properties

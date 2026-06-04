@@ -1,0 +1,70 @@
+plugins {
+    id 'java-library'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+def aspectjWeaverVersion = "1.9.22",
+    selenideVersion = "6.13.0",
+    restAssuredVersion = "5.3.0",
+    allureVersion = "2.21.0",
+    junitVersion = "5.9.3",
+    ownerVersion = "1.0.12",
+    slf4jVersion = "2.0.7"
+
+allure {
+    report {
+        version.set(allureVersion)
+    }
+    adapter {
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set(allureVersion)
+            }
+        }
+    }
+}
+
+dependencies {
+    testImplementation(
+            "org.aspectj:aspectjweaver:$aspectjWeaverVersion",
+            "com.codeborne:selenide:$selenideVersion",
+            "io.qameta.allure:allure-selenide:$allureVersion",
+            "io.appium:java-client:8.3.0",
+            "io.rest-assured:rest-assured:$restAssuredVersion",
+            "org.junit.jupiter:junit-jupiter:$junitVersion",
+            "org.aeonbits.owner:owner:$ownerVersion",
+            "org.slf4j:slf4j-simple:$slf4jVersion"
+    )
+}
+
+tasks.withType(Test).configureEach {
+    def platform = System.getProperty("platform", "android").toLowerCase()
+
+    systemProperty "platform", platform
+
+    System.properties.each { key, value ->
+        def propertyName = key.toString()
+
+        if (propertyName.startsWith("browserstack.")
+                || propertyName.startsWith("android.")
+                || propertyName.startsWith("ios.")) {
+            systemProperty propertyName, value.toString()
+        }
+    }
+
+    useJUnitPlatform {
+        includeTags platform
+    }
+
+    testLogging {
+        lifecycle {
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+}
