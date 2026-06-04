@@ -19,4 +19,4 @@ if [ "$PLATFORM" = "android" ]; then
   export BROWSERSTACK_APP_ANDROID
 fi
 
-gradle clean test -Dplatform="$PLATFORM"
+sh ./gradlew clean test -Dplatform="$PLATFORM"
