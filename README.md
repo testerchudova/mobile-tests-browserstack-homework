@@ -1,17 +1,29 @@
-# Mobile tests homework
+# Mobile tests homework 22/23
 
 ## Local run
 
 Android tests:
 
 ```bash
-gradle clean test -Dplatform=android
+./gradlew clean test -Dplatform=android -DdeviceHost=browserstack
 ```
 
 iOS tests:
 
 ```bash
-gradle clean test -Dplatform=ios
+./gradlew clean test -Dplatform=ios -DdeviceHost=browserstack
+```
+
+Android emulator tests:
+
+```bash
+./gradlew clean test -Dplatform=android -DdeviceHost=emulation
+```
+
+Android real device tests:
+
+```bash
+./gradlew clean test -Dplatform=android -DdeviceHost=real
 ```
 
 Credentials can be provided by:
@@ -35,6 +47,12 @@ For a Freestyle job on a Linux agent use `Execute shell`:
 
 ```bash
 sh ci/run-tests.sh
+```
+
+By default Jenkins runs `deviceHost=browserstack`. For local emulator or real device runs, start Appium with:
+
+```bash
+appium server --base-path /wd/hub
 ```
 
 The pipeline publishes Allure results from `build/allure-results`.

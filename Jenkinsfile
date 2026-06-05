@@ -46,12 +46,12 @@ pipeline {
                         )
                 ]) {
                     script {
-                        def command = "gradle clean test -Dplatform=${params.PLATFORM}"
+                        def command = "./gradlew clean test -Dplatform=${params.PLATFORM} -DdeviceHost=browserstack"
 
                         if (isUnix()) {
                             sh command
                         } else {
-                            bat command
+                            bat command.replace('./gradlew', 'gradlew.bat')
                         }
                     }
                 }

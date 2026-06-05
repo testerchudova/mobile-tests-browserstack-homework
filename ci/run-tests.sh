@@ -2,8 +2,9 @@
 set -eu
 
 PLATFORM="${PLATFORM:-android}"
+DEVICE_HOST="${DEVICE_HOST:-browserstack}"
 
-if [ "$PLATFORM" = "android" ]; then
+if [ "$PLATFORM" = "android" ] && [ "$DEVICE_HOST" = "browserstack" ]; then
   response="$(curl -sS -u "$BROWSERSTACK_USER:$BROWSERSTACK_KEY" \
     -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
     -F "url=https://www.browserstack.com/app-automate/sample-apps/android/WikipediaSample.apk")"
@@ -19,4 +20,4 @@ if [ "$PLATFORM" = "android" ]; then
   export BROWSERSTACK_APP_ANDROID
 fi
 
-sh ./gradlew clean test -Dplatform="$PLATFORM"
+sh ./gradlew clean test -Dplatform="$PLATFORM" -DdeviceHost="$DEVICE_HOST"

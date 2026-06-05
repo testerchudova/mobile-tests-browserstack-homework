@@ -44,13 +44,17 @@ dependencies {
 
 tasks.withType(Test).configureEach {
     def platform = System.getProperty("platform", "android").toLowerCase()
+    def deviceHost = System.getProperty("deviceHost", "browserstack").toLowerCase()
 
     systemProperty "platform", platform
+    systemProperty "deviceHost", deviceHost
 
     System.properties.each { key, value ->
         def propertyName = key.toString()
 
         if (propertyName.startsWith("browserstack.")
+                || propertyName.startsWith("emulation.")
+                || propertyName.startsWith("real.")
                 || propertyName.startsWith("android.")
                 || propertyName.startsWith("ios.")) {
             systemProperty propertyName, value.toString()

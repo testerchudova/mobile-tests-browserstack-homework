@@ -1,7 +1,11 @@
 /.idea
 /build
+/bin
 /.gradle
 *.class
 /allure-results
 /allure-report
+/src/test/resources/config/common.local.properties
 /src/test/resources/config/browserstack.local.properties
+/src/test/resources/config/emulation.local.properties
+/src/test/resources/config/real.local.properties

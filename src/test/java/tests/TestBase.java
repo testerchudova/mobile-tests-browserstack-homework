@@ -4,7 +4,8 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.logevents.SelenideLogger;
-import drivers.BrowserstackDriver;
+import config.ConfigReader;
+import drivers.MobileDriver;
 import helpers.Attach;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
@@ -16,8 +17,8 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class TestBase {
     @BeforeAll
-    static void beforeAll() {
-        Configuration.browser = BrowserstackDriver.class.getName();
+    static void setUpAll() {
+        Configuration.browser = MobileDriver.class.getName();
         Configuration.browserSize = null;
         Configuration.screenshots = false;
         Configuration.savePageSource = false;
@@ -28,18 +29,18 @@ public class TestBase {
     }
 
     @BeforeEach
-    void beforeEach() {
+    void setUp() {
         open();
     }
 
     @AfterEach
-    void addAttachments() {
+    void tearDown() {
         if (!WebDriverRunner.hasWebDriverStarted()) {
             return;
         }
 
         String sessionId = Selenide.sessionId().toString();
-        Attach.attachAsText("BrowserStack session id", sessionId);
+        Attach.attachAsText("Appium session id", sessionId);
 
         try {
             addSafely("Screenshot attachment error", () ->
@@ -49,8 +50,10 @@ public class TestBase {
             closeWebDriver();
         }
 
-        addSafely("Video attachment error", () ->
-                Attach.addVideo(sessionId));
+        if (ConfigReader.isBrowserstack()) {
+            addSafely("Video attachment error", () ->
+                    Attach.addVideo(sessionId));
+        }
     }
 
     private void addSafely(String attachName, AttachmentAction action) {
